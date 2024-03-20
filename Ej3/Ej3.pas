@@ -11,25 +11,54 @@ end;
 
 fempleados = file of empleado;
 
-var
-
+var 
 empleados:fempleados;
+
+function buscarrecord (a,n:string ): empleado;
+var 
+raux:empleado;
+begin
+    if (not eof(empleados)) then begin
+        read (empleados, raux);
+        if (raux.nom=n) and (raux.ape=a) then 
+            buscarrecord:=raux
+        else 
+            buscarrecord:= buscarrecord(a,n);
+    end
+    else
+        raux.ape:= 'notfound';
+        buscarrecord:= raux; 
+end;
+
+procedure imprimirrecord (r:empleado);
+begin
+    writeln ('Datos del empleado ', r.ape, ' ', r.nom, ':');
+    writeln ('Num de empleado: ', r.num);
+    writeln ('Edad: ',r.edad , ' años');
+    writeln ('DNI: ', r.dni);
+end;
+
+var
 auxS:string;
-auxI:longint;
+auxI:shortint;
 r:empleado;
+nom,ape:string;
+
+
 
 begin
-    assign (empleados, 'archivo_empleados');
-    writeln ('Ingrese 1 para crear un archivo de empleados', #13+#10 ,'Ingrese 2 para abrir el archivo generado y leerlo ')
+    writeln ('Ingrese 1 para crear un archivo de empleados', #13+#10 ,'Ingrese 2 para abrir el archivo generado y leerlo ');
     readln (auxI);
-    if (auxI=1) then begin 
+    if (auxI=1) then begin
+        writeln ('Ingrese el nombre que quiere darle al archivo.');
+        readln (auxS);
+        assign (empleados, auxS); 
         rewrite (empleados);
-        writeln ('Ingrese ')
         r.ape:='xx';
         while (r.ape<>'fin') do begin
             writeln ('Ingrese el apellido del empleado');
             readln (r.ape);
-            if (r.ape<>'fin')
+            if (r.ape<>'fin') then begin
                 writeln ('Ingrese el nombre del empleado');
                 readln (r.nom);
                 writeln ('Ingrese el num de empleado');
@@ -40,11 +69,33 @@ begin
                 readln (r.dni); 
                 write (empleados,r);
             end;
+        end;
+        close (empleados);
     end
     else begin
+        assign (empleados, 'prueba1');
         reset (empleados);
-        writeln ('Escriba 1 para listar en pantalla los datos de los empleadaos que tengan un nombre y apellido determinado',#13+#10, )
+        writeln ('Escriba 1 para listar en pantalla los datos de los empleados que tengan un nombre y apellido determinado, para terminar ingrese el apellido xx',#13+#10,'Escriba 2 para', #13+#10 ,'Escriba 3 para..' );
+        readln (auxI);
+        if (auxI=1) then begin
+            ape:=' ';
+            while (ape<>'xx') do begin 
+                writeln ('Ingrese el apellido del empleado.');
+                readln (ape);
+                if (ape<> 'xx') then begin 
+                    writeln ('Ingrese el nombre del empleado');
+                    readln (nom);
+                    seek (empleados, 0);
+                    imprimirrecord (buscarrecord (ape,nom));
+                end;
+            end;
+        end
+        else if (auxI=2) then begin 
 
+        end
+        else begin
+
+        end; 
     end; 
 
 end.
