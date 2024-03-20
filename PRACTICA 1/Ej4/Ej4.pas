@@ -125,6 +125,6 @@ begin
         else begin
             imprimirmayores();
         end; 
+    close (empleados); 
     end; 
-
 end.
