@@ -1,5 +1,4 @@
 program ej3;
-
 type
 empleado=record
     num:integer;
@@ -72,8 +71,6 @@ end;
 procedure agregaralarchivo (r:empleado);
 var aux:empleado;
 begin 
-    assign (empleados, 'prueba2');
-    reset (empleados);
     aux.num:= -1;
     while (not eof(empleados)) and (aux.num<>r.num) do begin 
         read (empleados,aux);
@@ -82,7 +79,6 @@ begin
         writeln ('Empleado ya cargado')
     else 
         write (empleados,r);
-    close (empleados);
 end;
 
 procedure modificarEdad (num,edad:integer);
@@ -109,9 +105,10 @@ auxI2:integer;
 auxI:shortint;
 r:empleado;
 nom,ape:string;
+arch:Text;
 
 begin
-    writeln ('Ingrese 1 para crear un archivo de empleados', #13+#10 ,'Ingrese 2 para abrir el archivo generado y leerlo ', #13+#10 ,'Ingrese 3 para añadir empleados al final del archivo', #13+#10 ,'Ingrese 4 para modificar la edad de un empleado dado.', #13+#10 ,'Ingrese 5 para exportar el contenido del archivo a un archivo de texto llamado "todos_empleados.txt"', #13+#10 ,'Ingrese 6 para exportar a un archivo de texto llamado “faltaDNIEmpleado.txt”, los empleados que no tengan cargado el DNI (DNI en 00).');
+    writeln ('Ingrese 1 para crear un archivo de empleados', #13+#10 ,'Ingrese 2 para abrir el archivo generado y leerlo ', #13+#10 ,'Ingrese 3 para añadir empleados al final del archivo', #13+#10 ,'Ingrese 4 para modificar la edad de un empleado dado.', #13+#10 ,'Ingrese 5 para exportar el contenido del archivo a un archivo de texto llamado "todos_empleados.txt"', #13+#10 ,'Ingrese 6 para exportar a un archivo de texto llamado "faltaDNIEmpleado.txt", los empleados que no tengan cargado el DNI (DNI en 00).');
     readln (auxI);
     case auxI of 
     1:  begin
@@ -164,18 +161,26 @@ begin
     close (empleados) 
     end;
     3: begin  
-        writeln ('Ingrese los datos del empleado que quiere agregar: ');
-        writeln ('Apellido:');
-        readln (r.ape);
-        writeln ('Nombre:');
-        readln (r.nom);
-        writeln ('Edad:');
-        readln (r.edad);
-        writeln ('Num de empleado:');
-        readln (r.num);
-        writeln ('DNI:');
-        readln (r.dni);
-        agregaralarchivo (r);
+        r.ape:='aa';
+        assign (empleados, 'prueba2');
+        reset (empleados);
+        while (r.ape<>'fin') do begin 
+            writeln ('Ingrese los datos del empleado que quiere agregar: ');
+            writeln ('Apellido:');
+            readln (r.ape);
+            if (r.ape<>'fin') then begin 
+                writeln ('Nombre:');
+                readln (r.nom);
+                writeln ('Edad:');
+                readln (r.edad);
+                writeln ('Num de empleado:');
+                readln (r.num);
+                writeln ('DNI:');
+                readln (r.dni);
+                agregaralarchivo (r);
+            end;
+        end;
+        close (empleados);
     end;
     4: begin 
         writeln ('Ingrese el num del empleado a modificarle la edad');
@@ -185,10 +190,42 @@ begin
         modificarEdad(auxI2,auxI);
     end; 
     5: begin  
-        writeln ('');
+        assign (empleados, 'prueba2');
+        reset (empleados);
+        assign (arch,'todos_empleados.txt');
+        rewrite (arch);
+        while (not eof(empleados)) do begin 
+            read (empleados, r);
+            with r do begin 
+                writeln (arch,num);
+                writeln (arch,edad);
+                writeln (arch,dni); 
+                writeln (arch,ape);
+                writeln (arch,nom);
+            end;
+        end;
+        close (arch);
+        close (empleados);
     end;
     6: begin 
-        writeln ('');
+        assign (empleados, 'prueba2');
+        reset (empleados);
+        assign (arch,'faltaDNIEmpleado.txt');
+        rewrite (arch);
+        while (not eof(empleados)) do begin 
+            read (empleados, r);
+            if (r.dni=0) then begin 
+                with r do begin 
+                    writeln (arch,num);
+                    writeln (arch,edad);
+                    writeln (arch,dni); 
+                    writeln (arch,ape);
+                    writeln (arch,nom);
+                end;
+            end; 
+        end;
+        close (arch);
+        close (empleados);
     end;
     else begin 
         writeln ('Opcion ingresada no valida.');
