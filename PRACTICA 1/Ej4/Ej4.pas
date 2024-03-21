@@ -69,16 +69,52 @@ begin
     end;
 end;
 
+procedure agregaralarchivo (r:empleado);
+var aux:empleado;
+begin 
+    assign (empleados, 'prueba2');
+    reset (empleados);
+    aux.num:= -1;
+    while (not eof(empleados)) and (aux.num<>r.num) do begin 
+        read (empleados,aux);
+    end;
+    if (aux.num=r.num) then 
+        writeln ('Empleado ya cargado')
+    else 
+        write (empleados,r);
+    close (empleados);
+end;
+
+procedure modificarEdad (num,edad:integer);
+var r:empleado;
+begin 
+    r.num:=-1;
+    assign (empleados, 'prueba2');
+    reset (empleados);
+    while (not eof(empleados)) and (r.num<>num) do begin 
+        read (empleados,r);
+    end;
+    if (r.num=num) then begin 
+        r.edad:=edad;
+        seek (empleados,filepos(empleados)-1);
+        write (empleados,r) 
+    end
+    else 
+        writeln ('no se encontro ese empleado');
+end;
+
 var
 auxS:string;
+auxI2:integer;
 auxI:shortint;
 r:empleado;
 nom,ape:string;
 
 begin
-    writeln ('Ingrese 1 para crear un archivo de empleados', #13+#10 ,'Ingrese 2 para abrir el archivo generado y leerlo ');
+    writeln ('Ingrese 1 para crear un archivo de empleados', #13+#10 ,'Ingrese 2 para abrir el archivo generado y leerlo ', #13+#10 ,'Ingrese 3 para añadir empleados al final del archivo', #13+#10 ,'Ingrese 4 para modificar la edad de un empleado dado.', #13+#10 ,'Ingrese 5 para exportar el contenido del archivo a un archivo de texto llamado "todos_empleados.txt"', #13+#10 ,'Ingrese 6 para exportar a un archivo de texto llamado “faltaDNIEmpleado.txt”, los empleados que no tengan cargado el DNI (DNI en 00).');
     readln (auxI);
-    if (auxI=1) then begin
+    case auxI of 
+    1:  begin
         writeln ('Ingrese el nombre que quiere darle al archivo.');
         readln (auxS);
         assign (empleados, auxS); 
@@ -100,8 +136,8 @@ begin
             end;
         end;
         close (empleados);
-    end
-    else begin
+    end;
+    2:  begin
         assign (empleados, 'prueba2');
         reset (empleados);
         writeln ('Escriba 1 para listar en pantalla los datos de los empleados que tengan un nombre y apellido determinado, para terminar ingrese el apellido xx',#13+#10,'Escriba 2 para listar todos los empleados', #13+#10 ,'Escriba 3 para listar los empleados mayores a 70' );
@@ -125,6 +161,38 @@ begin
         else begin
             imprimirmayores();
         end; 
-    close (empleados); 
+    close (empleados) 
+    end;
+    3: begin  
+        writeln ('Ingrese los datos del empleado que quiere agregar: ');
+        writeln ('Apellido:');
+        readln (r.ape);
+        writeln ('Nombre:');
+        readln (r.nom);
+        writeln ('Edad:');
+        readln (r.edad);
+        writeln ('Num de empleado:');
+        readln (r.num);
+        writeln ('DNI:');
+        readln (r.dni);
+        agregaralarchivo (r);
+    end;
+    4: begin 
+        writeln ('Ingrese el num del empleado a modificarle la edad');
+        readln (auxI2);
+        writeln ('Ingrese la nueva edad');
+        readln (auxI);
+        modificarEdad(auxI2,auxI);
     end; 
+    5: begin  
+        writeln ('');
+    end;
+    6: begin 
+        writeln ('');
+    end;
+    else begin 
+        writeln ('Opcion ingresada no valida.');
+    end;
+    end;
 end.
+
