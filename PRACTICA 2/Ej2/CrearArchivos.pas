@@ -20,6 +20,8 @@ procedure imprimir (var a:bin);
             read (a,alu);
             writeln (alu.cod);
             writeln (alu.nom);
+            writeln (alu.materiasCF);
+            writeln (alu.materiasSF);
             writeln ('-----------------')
         end;
     end;
@@ -45,6 +47,7 @@ nom:string;
 archivobin2:bin2;
 
 begin
+ (*
     writeln ('Ingrese 1 para crear archivo maestro, ingrese 2 para crear archivo detalle');
     readln (aux);
     if (aux=1) then begin  
@@ -86,4 +89,8 @@ begin
     seek (archivobin2,0);
     imprimir2 (archivobin2);
     close (archivobin2);
+    *)
+    assign (archivobin,'MAESTRO');
+    reset (archivobin);
+    imprimir (archivobin);
 end.
