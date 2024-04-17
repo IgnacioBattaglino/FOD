@@ -47,7 +47,7 @@ nom:string;
 archivobin2:bin2;
 
 begin
- (*
+ 
     writeln ('Ingrese 1 para crear archivo maestro, ingrese 2 para crear archivo detalle');
     readln (aux);
     if (aux=1) then begin  
