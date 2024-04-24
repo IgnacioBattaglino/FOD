@@ -11,7 +11,6 @@ type
     maestro=file of producto;
     detalle=file of venta;
 
-
 var 
     mae:maestro;
     det:detalle;
@@ -39,10 +38,12 @@ begin
         rewrite (det);
         nombreArchivo:= 'detalle' + c + '.txt';
         assign (texto, nombreArchivo);
+        reset (texto);
         while (not eof(texto)) do begin 
             readln (texto, ven.cod, ven.cant);
             write (det,ven);
         end;
         close (det);
+        close (texto);
     end;
 end.
